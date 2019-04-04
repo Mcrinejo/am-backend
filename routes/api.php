@@ -14,7 +14,10 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+    return $request->users();
 });
 
-Route::get('healthCheck', 'defaultController@show');
+Route::get('healthCheck', 'defaultController@read');
+Route::post('healthCheck2', 'defaultController@create');
+Route::put('healthCheck3', 'defaultController@update');
+Route::delete('healthCheck4', 'defaultController@delete');  

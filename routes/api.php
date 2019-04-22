@@ -17,7 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->users();
 });
 
-Route::get('healthCheck', 'defaultController@read');
-Route::post('healthCheck2', 'defaultController@create');
-Route::put('healthCheck3', 'defaultController@update');
-Route::delete('healthCheck4', 'defaultController@delete');  
+Route::get('healthcheck', 'defaultController@get');
+
+Route::get('users/{id}', 'usersController@get');
+Route::get('users', 'usersController@getAll');
+Route::post('users', 'usersController@create');
+Route::put('users/{id}', 'usersController@update');
+Route::delete('users/{id}', 'usersController@delete');
+Route::get('register/verify/{confirmation_code}', 'usersController@verified');

@@ -12,7 +12,7 @@ class defaultController extends Controller
      * @return application/json
      */
 
-    public function read()
+    public function get()
     {
         return response()->json([
         'status' => 'ok'

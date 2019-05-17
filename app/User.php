@@ -4,8 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\role;
-
 
 
 class User extends Model
@@ -24,6 +22,9 @@ class User extends Model
      */
     protected $fillable = [
         'name', 'email', 'password','zipcode','city', 'country', 'birthdate', 'address', 'confirmed', 'confirmation_code', 'deleted_at'
+    ];
+    protected $hidden = [
+        'password'
     ];
     public function verifyUser()
     {

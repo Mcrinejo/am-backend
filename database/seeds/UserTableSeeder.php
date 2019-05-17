@@ -31,7 +31,6 @@ class UserTableSeeder extends Seeder
         $user->password = bcrypt('query');
         $user->confirmation_code = (string) Str::uuid();
         $user->save();
-        $user->roles()->attach($role_admin);
-
+        $user->roles()->attach($role_admin);     
     }
 }

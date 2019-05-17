@@ -48,8 +48,8 @@ class usersController extends Controller
     {
         $user = new User;
         $role_user = Role::where('name','user')->first();
-        $user->mail = $request->mail;
-        $user->password = Hash::make($request->password);
+        $user->email = $request->email;
+        $user->password = $request->password;
         $user->confirmation_code = (string) Str::uuid();
         
         if(isset($request->address)){
@@ -70,6 +70,7 @@ class usersController extends Controller
         if(isset($request->birthdate)){
             $user->birthdate = $request->birthdate;
         }
+
         $user->save();
         $user->roles()->attach($role_user);
 
@@ -93,7 +94,7 @@ class usersController extends Controller
             $user->name = $request->name;
         }
         if(isset($request->country)){
-            $user->country = $vcountry;
+            $user->country = $request->country;
         }
         if(isset($request->city)){
             $user->city = $request->city;
@@ -107,9 +108,7 @@ class usersController extends Controller
         $user->save();
 
         return response()->json($user);
-
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -131,6 +130,17 @@ class usersController extends Controller
         }
         $user->confirmed = 1;
         $user->save();
+        return response()->json($user);
+    }
+
+
+    public function is_valid_email($email){
+      $matches = null;
+      return (1 === preg_match('/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/', $email, $matches));
+    }
+
+    public function login(Request $request){
+        $user = User::where('email', $request->user)->where('password',$request->password)->first();
         return response()->json($user);
     }
 }

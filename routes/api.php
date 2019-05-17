@@ -25,3 +25,18 @@ Route::post('users', 'usersController@create');
 Route::put('users/{id}', 'usersController@update');
 Route::delete('users/{id}', 'usersController@delete');
 Route::get('register/verify/{confirmation_code}', 'usersController@verified');
+Route::post('users/login', 'usersController@login');
+
+
+Route::middleware('auth:api')->get('/tarot', function (Request $request) {
+    return $request->tarot();
+});
+
+Route::get('healthcheck1', 'defaultController@get');
+
+Route::get('tarots/{id}', 'tarotController@get');
+Route::get('tarots', 'tarotController@getAll');
+Route::post('tarots', 'tarotController@create');
+Route::put('tarots/{id}', 'tarotController@update');
+Route::delete('tarots/{id}', 'tarotController@delete');
+Route::get('register/verify/{confirmation_code}', 'tarotController@verified');

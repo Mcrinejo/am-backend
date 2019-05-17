@@ -12,7 +12,4 @@ class Tarot extends Model
     protected $fillable = [
         'usuario_id', 'preguntas', 'respuestas','estado','fecha_pedido', 'fecha_cita', 'tipos_tirada', 'presencial'
     ];
-    protected $hidden = [
-        'password'
-    ];
 }

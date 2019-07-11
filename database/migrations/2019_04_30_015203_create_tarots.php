@@ -15,18 +15,18 @@ class CreateTarots extends Migration
     {
         Schema::create('tarots', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('usuario_id')->unsigned();
-            $table->string('preguntas');
-            $table->string('estado');
-            $table->string('respuestas');
-            $table->timestamp('fecha_pedido')->nullable();
-            $table->timestamp('fecha_cita')->nullable(); 
-            $table->string('tipos_tirada');
-            $table->boolean('presencial');
+            $table->string('userId');
+            $table->string('question');
+            $table->string('status');
+            $table->string('answer')->nullable();
+            $table->timestamp('orderDate')->nullable();
+            $table->timestamp('appointmentDate')->nullable(); 
+            $table->string('pullType');
+            $table->boolean('presence');
         });
-        Schema::table('tarots', function(Blueprint $table) {
-            $table->foreign('usuario_id')->references('id')->on('users');
-        });
+        // Schema::table('tarots', function(Blueprint $table) {
+        //     // $table->foreign('userId')->references('id')->on('users');
+        // });
     }
 
     /**

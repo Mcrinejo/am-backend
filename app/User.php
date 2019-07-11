@@ -4,12 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Passport\HasApiTokens;
 
 
-class User extends Model
+class User extends Authenticatable
 {
     use SoftDeletes;
     public $timestamps = false;
+    use HasApiTokens, Notifiable;
 
     public function roles(){
         return $this->belongsToMany('App\Role');

@@ -16,9 +16,9 @@ class tarotController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-     public function getAll()
+     public function getAll($userId)
     {
-        $tarot = Tarot::get();
+        $tarot = Tarot::where('userId', $userId)->get();
         return response()->json($tarot);
     }
     
@@ -42,33 +42,23 @@ class tarotController extends Controller
     */
     public function create(Request $request)
     {
-        $tarot = new Tarot;
-        $tarot->usuario_id = $request->usuario_id;
+        try {
+            $tarot = new Tarot;
+            $tarot->userId = $request->userId;
+            $tarot->question = $request->question;
+            $tarot->status = 'pending';
+            $tarot->orderDate = date('Y-m-d H:i:s');
+            $tarot->pullType = $request->pullType;
+            $tarot->presence = $request->presence;
+            if($tarot->presence == true){
+                $tarot->appointmentDate = $request->appointmentDate;
+            }
+            $tarot->save();
+            return response()->json($tarot);
+        } catch (\Throwable $th) {
+            return response()->json([$th, 400]);
+        }
 
-        if(isset($request->pregunta)){
-            $tarot->pregunta = $request->pregunta;
-        }
-        if(isset($request->respuesta)){
-            $tarot->respuesta = $request->respuesta;
-        }
-        if(isset($request->estado)){
-            $tarot->estado = $request->estado;
-        }
-        if(isset($request->fechaPedido)){
-            $tarot->fechaPedido = $request->fecha_pedido;
-        }
-        if(isset($request->fechaCita)){
-            $tarot->fechaCita = $request->fecha_cita;
-        }
-        if(isset($request->tiposTirada)){
-            $tarot->tiposTirada = $request->tipos_tirada;
-        }
-        if(isset($request->presencial)){
-            $tarot->presencial = $request->presencial;
-        }
-        
-        $tarot->save();
-        return response()->json($tarot);
     }
     /**
      * Update the specified resource in storage.
@@ -80,26 +70,26 @@ class tarotController extends Controller
     public function update(Request $request, $id)
     {
         $tarot = Tarot::findOrFail($id);
-        if(isset($request->pregunta)){
-            $tarot->pregunta = $request->pregunta;
+        if(isset($request->question)){
+            $tarot->question = $request->question;
         }
-        if(isset($request->respuesta)){
-            $tarot->respuesta = $request->respuesta;
+        if(isset($request->answer)){
+            $tarot->answer = $request->answer;
         }
-        if(isset($request->estado)){
-            $tarot->estado = $request->estado;
+        if(isset($request->status)){
+            $tarot->status = $request->status;
         }
-        if(isset($request->fechaPedido)){
-            $tarot->fechaPedido = $request->fecha_pedido;
+        if(isset($request->orderDate)){
+            $tarot->orderDate = $request->orderDate;
         }
-        if(isset($request->fechaCita)){
-            $tarot->fechaCita = $request->fecha_cita;
+        if(isset($request->appointmentDate)){
+            $tarot->appointmentDate = $request->appointmentDate;
         }
-        if(isset($request->tiposTirada)){
-            $tarot->tiposTirada = $request->tipos_tirada;
+        if(isset($request->pullType)){
+            $tarot->pullType = $request->pullType;
         }
-        if(isset($request->presencial)){
-            $tarot->presencial = $request->presencial;
+        if(isset($request->presence)){
+            $tarot->presencial = $request->presence;
         }
         $tarot->save();
 
@@ -116,7 +106,7 @@ class tarotController extends Controller
         $tarot = Tarot::findOrFail($id);
         $tarot->delete();
         return response()->json([
-            'el id ' . $id .  ' ha sido borrado exitosamente.'
+            'id ' . $id .  ' has been successfully deleted.'
             ]);
     }
 }

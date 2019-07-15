@@ -70,14 +70,15 @@ class tarotController extends Controller
     public function update(Request $request, $id)
     {
         $tarot = Tarot::findOrFail($id);
+        if($tarot->status != 'pending'){
+            return response()->json([]);             
+        }
+
         if(isset($request->question)){
             $tarot->question = $request->question;
         }
         if(isset($request->answer)){
             $tarot->answer = $request->answer;
-        }
-        if(isset($request->status)){
-            $tarot->status = $request->status;
         }
         if(isset($request->orderDate)){
             $tarot->orderDate = $request->orderDate;
@@ -104,9 +105,13 @@ class tarotController extends Controller
     public function delete($id)
     {
         $tarot = Tarot::findOrFail($id);
+        if($tarot->status != 'pending'){
+            return response()->json([]);             
+        }
         $tarot->delete();
         return response()->json([
             'id ' . $id .  ' has been successfully deleted.'
             ]);
     }
+
 }

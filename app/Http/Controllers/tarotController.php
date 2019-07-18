@@ -13,11 +13,13 @@ class tarotController extends Controller
     
     /**
      * Display a listing of the resource.
-     *
+     * 
+     * @param \Illuminate\Http\Request $request 
      * @return \Illuminate\Http\Response
      */
-     public function getAll($userId)
+     public function getAll(Request $request)
     {
+        $userId = $request->header('access_token');
         $tarot = Tarot::where('userId', $userId)->get();
         return response()->json($tarot);
     }
@@ -112,6 +114,24 @@ class tarotController extends Controller
         return response()->json([
             'id ' . $id .  ' has been successfully deleted.'
             ]);
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        $tarot = Tarot::findOrFail($id);
+        try {
+            $tarot->status = $request->status;
+            $tarot->save();
+            return response()->json($tarot);
+        } catch (\Throwable $th) {
+            return response()->json([$th, 400]);
+        }
     }
 
 }

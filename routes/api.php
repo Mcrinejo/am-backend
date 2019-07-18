@@ -38,5 +38,5 @@ Route::get('tarots/{id}', 'tarotController@get');
 Route::get('tarots', 'tarotController@getAll');
 Route::post('tarots', 'tarotController@create');
 Route::put('tarots/{id}', 'tarotController@update');
+Route::patch('tarots/{id}', 'tarotController@updateStatus');
 Route::delete('tarots/{id}', 'tarotController@delete');
-Route::get('register/verify/{confirmation_code}', 'tarotController@verified');

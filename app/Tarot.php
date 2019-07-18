@@ -10,6 +10,6 @@ class Tarot extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'usuario_id', 'preguntas', 'respuestas','estado','fecha_pedido', 'fecha_cita', 'tipos_tirada', 'presencial'
+        'userId', 'question', 'answer','status','orderDate', 'appointmentDate', 'pullType', 'presence'
     ];
 }

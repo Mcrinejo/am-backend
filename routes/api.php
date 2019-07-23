@@ -32,11 +32,20 @@ Route::middleware('auth:api')->get('/tarot', function (Request $request) {
     return $request->tarot();
 });
 
-Route::get('healthcheck1', 'defaultController@get');
 
 Route::get('tarots/{id}', 'tarotController@get');
 Route::get('tarots', 'tarotController@getAll');
 Route::post('tarots', 'tarotController@create');
 Route::put('tarots/{id}', 'tarotController@update');
-Route::patch('tarots/{id}', 'tarotController@updateStatus');
+Route::patch('tarots/{id}/status', 'tarotController@updateStatus');
 Route::delete('tarots/{id}', 'tarotController@delete');
+Route::patch('tarots/{id}/response', 'tarotController@updateResponse');
+
+
+Route::get('reiki/{id}', 'reikiController@get');
+Route::get('reiki', 'reikiController@getAll');
+Route::post('reiki', 'reikiController@create');
+Route::put('reiki/{id}', 'reikiController@update');
+Route::patch('reiki/{id}/status', 'reikiController@updateStatus');
+Route::delete('reiki/{id}', 'reikiController@delete');
+Route::patch('reiki/{id}/response', 'reikiController@updateResponse');

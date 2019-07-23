@@ -3,27 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Tarot;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Reiki;
 
-
-class tarotController extends Controller
+class reikiController extends Controller
 {
     use SoftDeletes;
-    
+
     /**
      * Display a listing of the resource.
      * 
      * @param \Illuminate\Http\Request $request 
      * @return \Illuminate\Http\Response
      */
-     public function getAll(Request $request)
+    public function getAll(Request $request)
     {
         $userId = $request->header('access_token');
-        $tarot = Tarot::where('userId', $userId)->get();
-        return response()->json($tarot);
+        $reiki = Reiki::where('userId', $userId)->get();
+        return response()->json($reiki);
     }
-    
+
     /**
      * show the specified resource from storage.
      *
@@ -32,36 +31,30 @@ class tarotController extends Controller
      */
     public function get($id)
     {
-        $tarot = Tarot::where('id', $id)->get();
-        return response()->json($tarot);
+        $reiki = Reiki::where('id', $id)->get();
+        return response()->json($reiki);
     }
-    /** 
-     * Store a newly created resource in storage.
-     *  
+    /**
+     * Show the form for creating a new resource.
      * @param \Illuminate\Http\Request $request 
-     * @return \Illuminate\Http\Response 
-     * 
-    */
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request)
     {
         try {
-            $tarot = new Tarot;
-            $tarot->userId = $request->userId;
-            $tarot->question = $request->question;
-            $tarot->status = 'pending';
-            $tarot->orderDate = date('Y-m-d H:i:s');
-            $tarot->pullType = $request->pullType;
-            $tarot->presence = $request->presence;
-            if($tarot->presence == true){
-                $tarot->appointmentDate = $request->appointmentDate;
-            }
-            $tarot->save();
-            return response()->json($tarot);
+            $reiki = new Reiki;
+            $reiki->userId = $request->userId;
+            $reiki->devolution = '';
+            $reiki->permission = $request->permission;
+            $reiki->status = 'pending';
+            $reiki->orderDate = date('Y-m-d H:i:s');
+            $reiki->save();
+            return response()->json($reiki);
         } catch (\Throwable $th) {
             return response()->json([$th, 400]);
         }
-
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -71,36 +64,24 @@ class tarotController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try{
-            
-            $tarot = Tarot::findOrFail($id);
-            if($tarot->status != 'pending'){
+        try {
+
+            $reiki = Reiki::findOrFail($id);
+            if($reiki->status != 'pending'){
                 return response()->json([]);             
             }
     
-            if(isset($request->question)){
-                $tarot->question = $request->question;
+            if(isset($request->permission)){
+                $reiki->permission = $request->permission;
             }
-            if(isset($request->answer)){
-                $tarot->answer = $request->answer;
-            }
+            $reiki->save();
     
-            if(isset($request->appointmentDate)){
-                $tarot->appointmentDate = $request->appointmentDate;
-            }
-            if(isset($request->pullType)){
-                $tarot->pullType = $request->pullType;
-            }
-            if(isset($request->presence)){
-                $tarot->presencial = $request->presence;
-            }
-            $tarot->save();
-    
-            return response()->json($tarot);
+            return response()->json($reiki);
         } catch (\Throwable $th) {
             return response()->json([[], 404]);
         }
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -109,15 +90,16 @@ class tarotController extends Controller
      */
     public function delete($id)
     {
-        $tarot = Tarot::findOrFail($id);
-        if($tarot->status != 'pending'){
+        $reiki = Reiki::findOrFail($id);
+        if($reiki->status != 'pending'){
             return response()->json([]);             
         }
-        $tarot->delete();
+        $reiki->delete();
         return response()->json([
             'id ' . $id .  ' has been successfully deleted.'
             ]);
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -127,11 +109,11 @@ class tarotController extends Controller
      */
     public function updateStatus(Request $request, $id)
     {
-        $tarot = Tarot::findOrFail($id);
+        $reiki = reiki::findOrFail($id);
         try {
-            $tarot->status = $request->status;
-            $tarot->save();
-            return response()->json($tarot);
+            $reiki->status = $request->status;
+            $reiki->save();
+            return response()->json($reiki);
         } catch (\Throwable $th) {
             return response()->json([$th, 400]);
         }
@@ -146,14 +128,13 @@ class tarotController extends Controller
      */
     public function updateResponse(Request $request, $id)
     {
-        $tarot = Tarot::findOrFail($id);
+        $reiki = Reiki::findOrFail($id);
         try {
-            $tarot->answer = $request->response;
-            $tarot->save();
-            return response()->json($tarot);
+            $reiki->devolution = $request->response;
+            $reiki->save();
+            return response()->json($reiki);
         } catch (\Throwable $th) {
             return response()->json([$th, 400]);
         }
     }
-
 }

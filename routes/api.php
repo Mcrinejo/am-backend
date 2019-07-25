@@ -49,3 +49,11 @@ Route::put('reiki/{id}', 'reikiController@update');
 Route::patch('reiki/{id}/status', 'reikiController@updateStatus');
 Route::delete('reiki/{id}', 'reikiController@delete');
 Route::patch('reiki/{id}/response', 'reikiController@updateResponse');
+
+Route::get('akashic/{id}', 'akashicController@get');
+Route::get('akashic', 'akashicController@getAll');
+Route::post('akashic', 'akashicController@create');
+Route::put('akashic/{id}', 'akashicController@update');
+Route::patch('akashic/{id}/status', 'akashicController@updateStatus');
+Route::delete('akashic/{id}', 'akashicController@delete');
+Route::patch('akashic/{id}/response', 'akashicController@updateResponse');

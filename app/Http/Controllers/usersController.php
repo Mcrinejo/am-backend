@@ -180,9 +180,10 @@ class usersController extends Controller
             } catch (\Throwable $th) {
                 return response()->json([$th->getMessage(), 400]);
             }
-            $user = User::where('email', $request->email)->first();
+            $user = array(
+                'user' => User::where('email', $request->email)->first(),
+                'access_token' => $res['access_token']
+            );
             return response()->json($user);
     }
 }
-
-

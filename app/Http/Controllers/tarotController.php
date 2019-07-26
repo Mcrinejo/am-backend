@@ -19,7 +19,7 @@ class tarotController extends Controller
      */
      public function getAll(Request $request)
     {
-        $userId = $request->header('access_token');
+        $userId = $request->header('user_id');
         $tarot = Tarot::where('userId', $userId)->get();
         return response()->json($tarot);
     }
@@ -46,7 +46,7 @@ class tarotController extends Controller
     {
         try {
             $tarot = new Tarot;
-            $tarot->userId = $request->userId;
+            $tarot->userId = $request->header('user_id');
             $tarot->question = $request->question;
             $tarot->status = 'pending';
             $tarot->orderDate = date('Y-m-d H:i:s');
@@ -74,17 +74,13 @@ class tarotController extends Controller
         try{
             
             $tarot = Tarot::findOrFail($id);
-            if($tarot->status != 'pending'){
+            if($tarot->status != 'pending' || $tarot->userId != $request->header('user_id')){
                 return response()->json([]);             
             }
     
             if(isset($request->question)){
                 $tarot->question = $request->question;
             }
-            if(isset($request->answer)){
-                $tarot->answer = $request->answer;
-            }
-    
             if(isset($request->appointmentDate)){
                 $tarot->appointmentDate = $request->appointmentDate;
             }

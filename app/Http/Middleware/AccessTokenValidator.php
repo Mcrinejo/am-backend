@@ -22,7 +22,8 @@ class AccessTokenValidator
         try {
             $key = config('services.oauth_server.key');
             $token = $request->header('access_token');
-            JWT::decode($token, $key, array('HS256'));
+            $decoded = JWT::decode($token, $key, array('HS256'));
+            $request->headers->set('user_id', $decoded->sub);
             return $next($request);
             
         } catch (\Throwable $th) {

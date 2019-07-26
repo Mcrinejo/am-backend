@@ -44,4 +44,7 @@ return [
         ],
     ],
 
+    'oauth_server' => [
+        'host' => env('OAUTH_SERVER_HOST'),
+        ]
 ];

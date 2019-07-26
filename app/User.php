@@ -3,19 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Passport\HasApiTokens;
 
 
-class User extends Authenticatable
+class User extends Model
 {
-    use SoftDeletes;
     public $timestamps = false;
-    use HasApiTokens, Notifiable;
-
-    public function roles(){
-        return $this->belongsToMany('App\Role');
-    }
     
     /**
      * The attributes that are mass assignable.
@@ -23,14 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','zipcode','city', 'country', 'birthdate', 'address', 'confirmed', 'confirmation_code', 'deleted_at'
+        'name', 'email','zipcode','city', 'country', 'birthdate', 'address', 'confirmed', 'confirmation_code', 'external_id', 'created_at', 'update_at', 'deleted_at'
     ];
-    protected $hidden = [
-        'password'
-    ];
-    public function verifyUser()
-    {
-        return $this->hasOne('App\VerifyUser');
-    }
 }
 

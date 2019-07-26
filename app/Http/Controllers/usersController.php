@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\Role;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-
+use GuzzleHttp\Client;
+use function GuzzleHttp\json_encode;
 
 class usersController extends Controller
 {
@@ -46,10 +44,32 @@ class usersController extends Controller
     */
     public function create(Request $request)
     {
+        try {
+            $password = md5($request->password);
+            $oauth_host = config('services.oauth_server.host');
+            $oauth_path = '/app/registry';
+            $client = new Client(['base_uri' => $oauth_host]);
+            $data = json_encode([
+                'email' => $request->email,
+                'password' => $password,
+                'roles' => ['user']
+            ]);
+            $response = $client->post($oauth_path, [
+                // un array con la data de los headers como tipo de peticion, etc.
+                'headers' => [
+                    'x-key' => '2fvTdG53VCp6z8ZbV66h',
+                    'content-type' => 'application/json'
+                ],
+                // array de datos del formulario
+                'body' => $data
+            ]);
+            $res = json_decode($response->getBody(), true);
+            } catch (\Throwable $th) {
+                return response()->json([$th->getMessage(), 400]);
+            }
         $user = new User;
-        $role_user = Role::where('name','user')->first();
         $user->email = $request->email;
-        $user->password = $request->password;
+        $user->external_id = $res['user_id'];
         $user->confirmation_code = (string) Str::uuid();
         
         if(isset($request->address)){
@@ -72,8 +92,6 @@ class usersController extends Controller
         }
 
         $user->save();
-        $user->roles()->attach($role_user);
-
         
         return response()->json($user);
     }
@@ -140,7 +158,31 @@ class usersController extends Controller
     }
 
     public function login(Request $request){
-        $user = User::where('email', $request->user)->where('password',$request->password)->first();
-        return response()->json($user);
+        try {
+            $password = md5($request->password);
+            $oauth_host = config('services.oauth_server.host');
+            $oauth_path = '/app/login';
+            $client = new Client(['base_uri' => $oauth_host]);
+            $data = json_encode([
+                'email' => $request->email,
+                'password' => $password
+            ]);
+            $response = $client->post($oauth_path, [
+                // un array con la data de los headers como tipo de peticion, etc.
+                'headers' => [
+                    'x-key' => '2fvTdG53VCp6z8ZbV66h',
+                    'content-type' => 'application/json'
+                ],
+                // array de datos del formulario
+                'body' => $data
+            ]);
+            $res = json_decode($response->getBody(), true);
+            } catch (\Throwable $th) {
+                return response()->json([$th->getMessage(), 400]);
+            }
+            $user = User::where('email', $request->email)->first();
+            return response()->json($user);
     }
 }
+
+

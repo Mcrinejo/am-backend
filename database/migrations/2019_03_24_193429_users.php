@@ -17,7 +17,6 @@ class Users extends Migration
             $table->increments('id')->index();
             $table->string('name')->nullable();
             $table->string('email')->unique();
-            $table->string('password');
             $table->timestamp('birthdate')->nullable();
             $table->integer('zipcode')->nullable();
             $table->string('address')->nullable();
@@ -25,6 +24,7 @@ class Users extends Migration
             $table->string('city')->nullable();
             $table->boolean('confirmed')->default(0);
             $table->uuid('confirmation_code');
+            $table->string('external_id')->unique();
         });
     }
 

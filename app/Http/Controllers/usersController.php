@@ -49,10 +49,11 @@ class usersController extends Controller
             $oauth_host = config('services.oauth_server.host');
             $oauth_path = '/app/registry';
             $client = new Client(['base_uri' => $oauth_host]);
+            $roles = (isset($request->roles) && count($request->roles) > 0) ? $request->roles : ['user'];
             $data = json_encode([
                 'email' => $request->email,
                 'password' => $password,
-                'roles' => ['user']
+                'roles' => $roles
             ]);
             $response = $client->post($oauth_path, [
                 // un array con la data de los headers como tipo de peticion, etc.

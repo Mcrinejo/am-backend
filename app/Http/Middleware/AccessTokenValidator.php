@@ -24,6 +24,7 @@ class AccessTokenValidator
             $token = $request->header('access_token');
             $decoded = JWT::decode($token, $key, array('HS256'));
             $request->headers->set('user_id', $decoded->sub);
+            $request->headers->set('roles', array($decoded->roles));
             return $next($request);
             
         } catch (\Throwable $th) {

@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Tarot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 class tarotController extends Controller
 {
     use SoftDeletes;
@@ -74,7 +73,7 @@ class tarotController extends Controller
         try{
             
             $tarot = Tarot::findOrFail($id);
-            if($tarot->status != 'pending' || $tarot->userId != $request->header('user_id')){
+            if(!in_array($tarot->status, ['pendingToPaid', 'paidOut', 'pending']) || $tarot->userId != $request->header('user_id')){
                 return response()->json([]);             
             }
     
@@ -103,10 +102,10 @@ class tarotController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         $tarot = Tarot::findOrFail($id);
-        if($tarot->status != 'pending'){
+        if($tarot->status != 'pending' || $tarot->userId != $request->header('user_id')){
             return response()->json([]);             
         }
         $tarot->delete();
@@ -151,5 +150,17 @@ class tarotController extends Controller
             return response()->json([$th, 400]);
         }
     }
-
+    
+    /**
+     * Display a listing of the resource from status.
+     * 
+     * @param \Illuminate\Http\Request $request 
+     * @return \Illuminate\Http\Response
+     */
+    public function getListForProductStatus(Request $request) 
+    {
+        $status = ($request->status != NULL) ? $request->status : 'pending';
+        $tarot = Tarot::where('status', $status)->get();
+        return response()->json($tarot);
+    }
 }

@@ -18,7 +18,7 @@ class reikiController extends Controller
      */
     public function getAll(Request $request)
     {
-        $userId = $request->header('access_token');
+        $userId = $request->header('user_id');
         $reiki = Reiki::where('userId', $userId)->get();
         return response()->json($reiki);
     }
@@ -43,7 +43,7 @@ class reikiController extends Controller
     {
         try {
             $reiki = new Reiki;
-            $reiki->userId = $request->userId;
+            $reiki->userId = $request->header('user_id');
             $reiki->devolution = '';
             $reiki->permission = $request->permission;
             $reiki->status = 'pending';
@@ -67,7 +67,7 @@ class reikiController extends Controller
         try {
 
             $reiki = Reiki::findOrFail($id);
-            if($reiki->status != 'pending'){
+            if($reiki->status != 'pending' || $reiki->userId != $request->header('user_id')){
                 return response()->json([]);             
             }
     
@@ -88,10 +88,10 @@ class reikiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function delete(Request $request ,$id)
     {
         $reiki = Reiki::findOrFail($id);
-        if($reiki->status != 'pending'){
+        if($reiki->status != 'pending' || $reiki->userId != $request->header('user_id')){
             return response()->json([]);             
         }
         $reiki->delete();
@@ -136,5 +136,11 @@ class reikiController extends Controller
         } catch (\Throwable $th) {
             return response()->json([$th, 400]);
         }
+    }
+    public function getListForProductStatus(Request $request) 
+    {
+        $status = ($request->status != NULL) ? $request->status : 'pending';
+        $reiki = Reiki::where('status', $status)->get();
+        return response()->json($reiki);
     }
 }

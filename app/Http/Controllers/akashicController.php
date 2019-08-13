@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use App\Akashic;
 
 class akashicController extends Controller
@@ -19,7 +18,7 @@ class akashicController extends Controller
      */
     public function getAll(Request $request)
     {
-        $userId = $request->header('access_token');
+        $userId = $request->header('user_id');
         $akashic = Akashic::where('userId', $userId)->get();
         return response()->json($akashic);
     }
@@ -43,7 +42,7 @@ class akashicController extends Controller
     {
         try {
             $akashic = new Akashic;
-            $akashic->userId = $request->userId;
+            $akashic->userId = $request->header('user_id');
             $akashic->devolution = '';
             $akashic->permission = $request->permission;
             $akashic->status = 'pending';
@@ -67,7 +66,7 @@ class akashicController extends Controller
         try {
 
             $akashic = Akashic::findOrFail($id);
-            if($akashic->status != 'pending'){
+            if($akashic->status != 'pending' || $akashic->userId != $request->header('user_id')){
                 return response()->json([]);             
             }
     
@@ -87,10 +86,10 @@ class akashicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         $akashic = Akashic::findOrFail($id);
-        if($akashic->status != 'pending'){
+        if($akashic->status != 'pending' || $akashic->userId != $request->header('user_id')){
             return response()->json([]);             
         }
         $akashic->delete();
@@ -135,5 +134,10 @@ class akashicController extends Controller
             return response()->json([$th, 400]);
         }
     }
-
+    public function getListForProductStatus(Request $request) 
+    {
+        $status = ($request->status != NULL) ? $request->status : 'pending';
+        $akashic = Akashic::where('status', $status)->get();
+        return response()->json($akashic);
+    }
 }

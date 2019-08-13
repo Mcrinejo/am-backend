@@ -37,23 +37,26 @@ Route::get('tarots/{id}', 'tarotController@get');
 Route::get('tarots', 'tarotController@getAll');
 Route::post('tarots', 'tarotController@create');
 Route::put('tarots/{id}', 'tarotController@update');
-Route::patch('tarots/{id}/status', 'tarotController@updateStatus');
+Route::patch('tarots/{id}/status', 'tarotController@updateStatus')->middleware('role.verified');
 Route::delete('tarots/{id}', 'tarotController@delete');
-Route::patch('tarots/{id}/response', 'tarotController@updateResponse');
-
+Route::patch('tarots/{id}/response', 'tarotController@updateResponse')->middleware('role.verified');
+Route::get('tarots/list/{status}', 'tarotController@getListForProductStatus')->middleware('role.verified');
 
 Route::get('reiki/{id}', 'reikiController@get');
 Route::get('reiki', 'reikiController@getAll');
 Route::post('reiki', 'reikiController@create');
 Route::put('reiki/{id}', 'reikiController@update');
-Route::patch('reiki/{id}/status', 'reikiController@updateStatus');
+Route::patch('reiki/{id}/status', 'reikiController@updateStatus')->middleware('role.verified');
 Route::delete('reiki/{id}', 'reikiController@delete');
-Route::patch('reiki/{id}/response', 'reikiController@updateResponse');
+Route::patch('reiki/{id}/response', 'reikiController@updateResponse')->middleware('role.verified');
+Route::get('reiki/list/{status}', 'reikiController@getListForProductStatus')->middleware('role.verified');
+
 
 Route::get('akashic/{id}', 'akashicController@get');
 Route::get('akashic', 'akashicController@getAll');
 Route::post('akashic', 'akashicController@create');
 Route::put('akashic/{id}', 'akashicController@update');
-Route::patch('akashic/{id}/status', 'akashicController@updateStatus');
+Route::patch('akashic/{id}/status', 'akashicController@updateStatus')->middleware('role.verified');
 Route::delete('akashic/{id}', 'akashicController@delete');
-Route::patch('akashic/{id}/response', 'akashicController@updateResponse');
+Route::patch('akashic/{id}/response', 'akashicController@updateResponse')->middleware('role.verified');
+Route::get('akashic/list/{status}', 'akashicController@getListForProductStatus')->middleware('role.verified');

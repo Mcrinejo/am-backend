@@ -17,7 +17,7 @@ class Users extends Migration
             $table->increments('id')->index();
             $table->string('name')->nullable();
             $table->string('email')->unique();
-            $table->timestamp('birthdate')->nullable();
+            $table->date('birthdate')->nullable();
             $table->integer('zipcode')->nullable();
             $table->string('address')->nullable();
             $table->string('country')->nullable();
